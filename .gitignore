@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /target/
+=======
+target/
+>>>>>>> init
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -8,13 +12,17 @@
 .project
 .settings
 .springBeans
+<<<<<<< HEAD
 .sts4-cache
+=======
+>>>>>>> init
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+<<<<<<< HEAD
 *.log
 
 ### NetBeans ###
@@ -24,3 +32,15 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+=======
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+.DS_Store
+catalina.base_IS_UNDEFINED/
+>>>>>>> init

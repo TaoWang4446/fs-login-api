@@ -154,6 +154,10 @@ public class VehicleTests {
         LogUtil.line("查询结果：" + JacksonUtil.obj2Json(baseResult));
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> init
     @Test
     @DisplayName("测试添加物品服务")
     public void testSaveVehicleCharge() {
@@ -200,6 +204,7 @@ public class VehicleTests {
         BaseResult baseResult = vehicleService.loadQrCode(loginItem, data);
         LogUtil.line("加载结果：" + JacksonUtil.obj2Json(baseResult));
     }
+<<<<<<< HEAD
 
     @Test
     @DisplayName("测试接运字典信息")
@@ -241,4 +246,6 @@ public class VehicleTests {
             LogUtil.line("执行异常：" + e.getMessage());
         }
     }
+=======
+>>>>>>> init
 }
