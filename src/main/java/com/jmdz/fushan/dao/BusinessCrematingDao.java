@@ -64,4 +64,14 @@ public interface BusinessCrematingDao {
             "  delete from " + TableNames.Charge + " where OperationNO = #{operationNo} and IsFinished = 0 ;")
     void deleteRecordCremating(@Param("operationNo") String operationNo);
 
+    /**
+     * 查询 火化任务 记录
+     *
+     * @param businessCrematingInfoData 火化实体类
+     * @return
+     * @author Wangshengtao
+     * @date 2020-08-10 18:22
+     */
+    @SelectProvider(type = BusinessCrematingProvider.class, method = "getBusinessCrematingInfoByCreating")
+    BusinessCrematingInfo getBusinessCrematingInfoByCreating(BusinessCrematingInfoData businessCrematingInfoData);
 }

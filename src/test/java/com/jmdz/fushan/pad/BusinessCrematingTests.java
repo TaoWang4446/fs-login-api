@@ -59,9 +59,9 @@ public class BusinessCrematingTests {
         BusinessCrematingInfoData businessCrematingInfoData = new BusinessCrematingInfoData();
 
         //data.setId(58111);
-        businessCrematingInfoData.setOperationNo("20200810002");
+        businessCrematingInfoData.setOperationNo("20200810004");
         businessCrematingInfoData.setCrematingMachineTypeID(780);
-        businessCrematingInfoData.setDeadType("1ed972a1-ab88-422c-8a4b-8530af8eeb89");
+        businessCrematingInfoData.setDeadType("ee3774ca-bdd3-436b-b959-773a93b723a3");
         businessCrematingInfoData.setAshesManageMode("带走");
         businessCrematingInfoData.setIsBespeak(1);
         businessCrematingInfoData.setCrematingPrice(new BigDecimal(590.00));

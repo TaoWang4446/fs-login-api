@@ -1,5 +1,6 @@
 package com.jmdz.fushan.pad.model.business;
 
+import com.jmdz.common.annotation.AnValidate;
 import com.jmdz.common.util.StringUtil;
 import com.jmdz.fushan.pad.model.UserData;
 import io.swagger.annotations.ApiModel;
@@ -26,6 +27,7 @@ public class BusinessCrematingInfoData extends UserData {
      * 业务编号
      */
     @ApiModelProperty(value = "业务编号", name = "operationNo", position = 2)
+    @AnValidate(name = "业务编号必填", required = true)
     private String operationNo;
 
     /**
@@ -81,6 +83,7 @@ public class BusinessCrematingInfoData extends UserData {
      * 随机业务号
      */
     @ApiModelProperty(value = "随机业务号", name = "randomId", position = 11)
+    @AnValidate(name = "随机号必填", required = true)
     private String randomId;
 
     public String getRandomId() {

@@ -18,8 +18,22 @@ public class BusinessCrematingInfo extends BaseBean {
     /**
      * 主键
      */
-    @ApiModelProperty(value = "主键", name = "id", position = 1)
-    private Integer id;
+    @ApiModelProperty(value = "费用主键", name = "chargeId", position = 1)
+    private Integer chargeId;
+
+    public Integer getChargeId() {
+        return chargeId;
+    }
+
+    public void setChargeId(Integer chargeId) {
+        this.chargeId = chargeId;
+    }
+
+    /**
+     * 主键
+     */
+    @ApiModelProperty(value = "火化主键", name = "crematingId", position = 1)
+    private Integer crematingId;
 
     /**
      * 业务编号
@@ -89,6 +103,19 @@ public class BusinessCrematingInfo extends BaseBean {
     @ApiModelProperty(value = "费用", name = "charge", position = 12)
     private BigDecimal charge;
 
+    /**
+     * 随机码
+     */
+    @ApiModelProperty(value = "随机码", name = "randomId", position = 13)
+    private String randomId;
+
+    public String getRandomId() {
+        return randomId;
+    }
+
+    public void setRandomId(String randomId) {
+        this.randomId = randomId;
+    }
 
     public String getCrematingMachineTypeText() {
         return crematingMachineTypeText;
@@ -98,12 +125,12 @@ public class BusinessCrematingInfo extends BaseBean {
         this.crematingMachineTypeText = crematingMachineTypeText;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getCrematingId() {
+        return crematingId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCrematingId(Integer crematingId) {
+        this.crematingId = crematingId;
     }
 
     public String getOperationNo() {

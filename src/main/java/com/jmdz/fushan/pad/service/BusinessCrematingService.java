@@ -16,12 +16,16 @@ import com.jmdz.fushan.pad.model.business.BusinessCrematingInfo;
 import com.jmdz.fushan.pad.model.business.BusinessCrematingInfoData;
 import com.jmdz.fushan.pad.model.business.DeadBasicItem;
 import com.jmdz.fushan.pad.model.login.LoginItem;
+import com.mchange.v2.lang.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.xml.crypto.Data;
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -76,13 +80,43 @@ public class BusinessCrematingService extends BaseService {
     public BaseResult saveBusinessCrematingInfo(BusinessCrematingData data, LoginItem loginItem) throws ActionException {
         BusinessCrematingInfo businessCrematingInfo = businessCrematingDao.
                 getBusinessCrematingInfoByOperationNo(data.getBusinessCrematingInfoData().getOperationNo());
-
+        //判断是 新增 or 更新
+        //uuid 作为唯一主键值
         String randomId = UUID.randomUUID().toString();
-        data.getBusinessCrematingInfoData().setCharge(getCharge(data));
-        data.getChargeItem().setCharge(getCharge(data));
+
+        if (Objects.isNull(businessCrematingInfo)){
+            // 新增
+            data.getBusinessCrematingInfoData().setCharge(getCharge(data));
+            data.getChargeItem().setCharge(getCharge(data));//费用
+            data.getBusinessCrematingInfoData().setRandomId(randomId);
+            data.getChargeItem().setRandomId(randomId);//随机号
+            data.getChargeItem().setOperationNo(data.getBusinessCrematingInfoData().getOperationNo());
+            businessCrematingDao.insertBusinessCrematingInfo(data.getBusinessCrematingInfoData(),loginItem);
+            if(DataUtil.invalid(data.getBusinessCrematingInfoData().getId())){
+                throw exception("添加火化任务失败");
+            }
+            chargeDao.insertChargeItem(data.getChargeItem(),loginItem.getUserId());
+            if(DataUtil.invalid(data.getChargeItem().getId())){
+                throw exception("添加火化任务的费用失败");
+            }
+        }else {
+            //1.根据 业务编号 && randoId 查询出 主键值
+
+            BusinessCrematingInfo businessCremating = businessCrematingDao.getBusinessCrematingInfoByCreating(data.getBusinessCrematingInfoData());
+            if(Objects.isNull(businessCremating)){
+                throw exception("业务编号 或者 randomId不对，请检查！");
+            }
+
+            //2.根据主键值去更新 数据
+            businessCrematingDao.updateBusinessCrematingInfo(data.getBusinessCrematingInfoData(),loginItem);
+            chargeDao.updateChargeItemByOperationNoAndRandomId(data.getChargeItem(),loginItem.getUserId());
+        }
+
         //新增 和 更新 时 uui不一致的问题
         // 后台逻辑计算 费用
 
+        // 根据主键 进行更新
+        /*int cid = data.getBusinessCrematingInfoData().getId();
         if(null == businessCrematingInfo){
             data.getBusinessCrematingInfoData().setRandomId(randomId);
             data.getChargeItem().setRandomId(randomId);
@@ -97,10 +131,10 @@ public class BusinessCrematingService extends BaseService {
             data.getBusinessCrematingInfoData().setRandomId(randomId);
             data.getChargeItem().setRandomId(randomId);
             data.getChargeItem().setOperationNo(data.getBusinessCrematingInfoData().getOperationNo());
-
+            businessCrematingDao.
             businessCrematingDao.updateBusinessCrematingInfo(data.getBusinessCrematingInfoData(),loginItem);
             chargeDao.updateChargeItemByOperationNoAndRandomId(data.getChargeItem(),loginItem.getUserId());
-        }
+        }*/
 
         String logContent = StringUtil.format("业务洽谈任务火化:,炉型【{0}】【{1}】,遗体类别【{2}】，骨灰处理方式【{3}】，是否留炉【{4}】，火化日期【{5}】，" +
                         " 火化单价【{6}】,费用【{7},charge表费用【{8}】。"
@@ -115,7 +149,7 @@ public class BusinessCrematingService extends BaseService {
 
         businessLogDao.insertBusinessLog(loginItem.getUserId(), loginItem.getRealName(), BusinessConst.BusinessType.XinXiDengJi,
                 "业务洽谈火化任务详情：",
-                null == businessCrematingInfo ? BusinessConst.OperateType.TianJia:BusinessConst.OperateType.XiuGai,
+                null == data.getBusinessCrematingInfoData().getId() ? BusinessConst.OperateType.TianJia:BusinessConst.OperateType.XiuGai,
                 logContent, data.getBusinessCrematingInfoData().getOperationNo());
 
         return success("保存成功");
