@@ -67,4 +67,9 @@ public final class PickerType {
      * 洽谈员(员工号)
      */
     public static final String QiaTanYuan = "QiaTanYuan";
+
+    /**
+     * 车辆用途
+     */
+    public static final String CheLiangYongTu = "CheLiangYongTu";
 }

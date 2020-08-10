@@ -2,6 +2,7 @@ package com.jmdz.fushan.dao;
 
 
 import com.jmdz.fushan.dao.provider.ChargeProvider;
+import com.jmdz.fushan.model.config.Constants;
 import com.jmdz.fushan.model.config.TableNames;
 import com.jmdz.fushan.pad.model.ChargeItem;
 import com.jmdz.fushan.pad.model.farewell.FarewellChargeItem;
@@ -172,44 +173,6 @@ public interface ChargeDao {
     Integer getAsFinishedByRandomId(@Param("operationNo") String operationNo, @Param("itemId") Integer itemId, @Param("randomId") String randomId);
 
     /**
-     * 按照主键获取丧葬用品费用
-     *
-     * @param chargeId 费用主键
-     * @return
-     * @author LiCongLu
-     * @date 2020-08-04 13:34
-     */
-    @SelectProvider(type = ChargeProvider.class, method = "getFuneralProductChargeById")
-    ChargeItem getFuneralProductChargeById(@Param("chargeId") Integer chargeId);
-
-    /**
-     * 更新丧葬用品费用
-     *
-     * @param item   费用
-     * @param userId 当前账号
-     * @return
-     * @author LiCongLu
-     * @date 2020-08-04 13:40
-     */
-    @UpdateProvider(type = ChargeProvider.class, method = "updateFuneralProductCharge")
-    void updateFuneralProductCharge(@Param("item") ChargeItem item, @Param("userId") String userId);
-
-    /**
-     * 删除丧葬用品费用
-     *
-     * @param operationNo 业务编号
-     * @param chargeId 费用主键
-     * @param productId 丧葬用品主键
-     * @return
-     * @author LiCongLu
-     * @date 2020-08-04 14:46
-     */
-    @Delete(" delete from " + TableNames.FuneralProduct + " where OperationNO = #{operationNo} and id = #{productId} " +
-            "  and Random_Id in (select Random_Id from f_Charge where ServiceItemID = ServiceItem and id = #{chargeId} and IsFinished = 0 ) ; " +
-            " delete from " + TableNames.Charge + " where OperationNO = #{operationNo} and id = #{chargeId} and IsFinished = 0 ;")
-    void deleteFuneralProductCharge(@Param("operationNo") String operationNo,@Param("chargeId") Integer chargeId, @Param("productId") Integer productId);
-
-    /**
      * 更新业务费用 By OperationNo And RandomId
      *
      * @param item   费用
@@ -220,4 +183,19 @@ public interface ChargeDao {
      */
     @UpdateProvider(type = ChargeProvider.class, method = "updateChargeItemByOperationNoAndRandomId")
     void updateChargeItemByOperationNoAndRandomId(@Param("item") ChargeItem item, @Param("userId") String userId);
+
+    /**
+     * 删除套餐的物品服务及整容项目
+     *
+     * @param operationNo 业务编号
+     * @return
+     * @author LiCongLu
+     * @date 2020-08-10 11:27
+     */
+    @Delete(" delete from " + TableNames.FuneralProduct + " where OperationNO = #{operationNo} and Remark='" + Constants.PI_LIANG_YUDING + "' " +
+            "  and Random_Id in (select Random_Id from f_Charge where ServiceItemID = ServiceItem and f_Charge.Remark='" + Constants.PI_LIANG_YUDING + "' and IsFinished = 0 ) ; " +
+            " delete from " + TableNames.FaceLift + " where OperationNO = #{operationNo}  and Remark='" + Constants.PI_LIANG_YUDING + "' " +
+            "  and Random_Id in (select Random_Id from f_Charge where ServiceItemID = ServiceItem and f_Charge.Remark='" + Constants.PI_LIANG_YUDING + "' and IsFinished = 0 ) ; " +
+            " delete from " + TableNames.Charge + " where OperationNO = #{operationNo} and IsFinished = 0 and Remark='" + Constants.PI_LIANG_YUDING + "';")
+    void deleteFuneralProductFaceLiftSuitCharge(@Param("operationNo") String operationNo);
 }

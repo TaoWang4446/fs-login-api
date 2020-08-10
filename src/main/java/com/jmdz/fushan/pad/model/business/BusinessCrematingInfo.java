@@ -7,10 +7,10 @@ import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 
 /**
- *@ClassName BusinessDeadInfoData
- *@Description TODO
- *@Author WangShengtao
- *@Date 2020-08-06 09:12
+ * @ClassName BusinessDeadInfoData
+ * @Description TODO
+ * @Author WangShengtao
+ * @Date 2020-08-06 09:12
  */
 @ApiModel(value = "业务洽谈火化任务详情展示信息", description = "业务洽谈火化任务详情展示信息")
 public class BusinessCrematingInfo extends BaseBean {
@@ -34,55 +34,69 @@ public class BusinessCrematingInfo extends BaseBean {
     private Integer crematingMachineTypeID;
 
     /**
+     * 炉型文本
+     */
+    @ApiModelProperty(value = "炉型文本", name = "crematingMachineTypeText", position = 5)
+    private String crematingMachineTypeText;
+
+    /**
      * 遗体类别
      */
-    @ApiModelProperty(value = "遗体类别", name = "deadType", position = 4)
+    @ApiModelProperty(value = "遗体类别", name = "deadType", position = 5)
     private String deadType;
 
     /**
      * 遗体类别文本
      */
-    @ApiModelProperty(value = "遗体类别文本", name = "deadTypeText", position = 5)
+    @ApiModelProperty(value = "遗体类别文本", name = "deadTypeText", position = 6)
     private String deadTypeText;
 
     /**
      * 骨灰处理方式
      */
-    @ApiModelProperty(value = "骨灰处理方式", name = "ashesManageMode", position = 6)
+    @ApiModelProperty(value = "骨灰处理方式", name = "ashesManageMode", position = 7)
     private String ashesManageMode;
 
 
     /**
      * 是否留炉（预约）
      */
-    @ApiModelProperty(value = "是否留炉（预约）", name = "isBespeak", position = 7)
+    @ApiModelProperty(value = "是否留炉（预约）", name = "isBespeak", position = 8)
     private Integer isBespeak;
 
     /**
-     * 火化日期
+     * 入炉火化时间
      */
-    @ApiModelProperty(value = "火化日期", name = "cremationTime", position = 8)
-    private String cremationTime;
+    @ApiModelProperty(value = "入炉火化时间", name = "orderCremationTime", position = 9)
+    private String orderCremationTime;
 
     /**
      * 火化单价
      */
-    @ApiModelProperty(value = "火化单价", name = "crematingPrice", position = 9)
+    @ApiModelProperty(value = "火化单价", name = "crematingPrice", position = 10)
     private BigDecimal crematingPrice;
 
 
     /**
      * 火化费用
      */
-    @ApiModelProperty(value = "火化费用", name = "crematingCharge", position = 10)
+    @ApiModelProperty(value = "火化费用", name = "crematingCharge", position = 11)
     private BigDecimal crematingCharge;
 
     /**
      * 费用
      */
-    @ApiModelProperty(value = "费用", name = "charge", position = 11)
+    @ApiModelProperty(value = "费用", name = "charge", position = 12)
     private BigDecimal charge;
 
+
+    public String getCrematingMachineTypeText() {
+        return crematingMachineTypeText;
+    }
+
+    public void setCrematingMachineTypeText(String crematingMachineTypeText) {
+        this.crematingMachineTypeText = crematingMachineTypeText;
+    }
 
     public Integer getId() {
         return id;
@@ -125,12 +139,12 @@ public class BusinessCrematingInfo extends BaseBean {
         this.ashesManageMode = ashesManageMode;
     }
 
-    public String getCremationTime() {
-        return cremationTime;
+    public String getOrderCremationTime() {
+        return orderCremationTime;
     }
 
-    public void setCremationTime(String cremationTime) {
-        this.cremationTime = cremationTime;
+    public void setOrderCremationTime(String orderCremationTime) {
+        this.orderCremationTime = orderCremationTime;
     }
 
     public BigDecimal getCrematingPrice() {

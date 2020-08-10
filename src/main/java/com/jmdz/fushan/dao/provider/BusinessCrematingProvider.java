@@ -14,36 +14,6 @@ import org.apache.ibatis.jdbc.SQL;
  */
 public class BusinessCrematingProvider {
 
-
-    /**
-     * 按照业务编号加载 火化任务列表 信息
-     *
-     * @param operationNo 业务编码
-     * @return
-     * @author Wangshengtao
-     * @date 2020-08-06 09:41
-     */
-    public String getBusinessCrematingListInfoByOperationNo(@Param("operationNo") String operationNo) {
-        return new SQL() {
-            {
-                StringBuilder builder = new StringBuilder();
-                builder.append(" top 1 cr.id,cr.OperationNO as operationNO");
-                builder.append(" , CrematingMachineTypeID as crematingMachineTypeID ");
-                builder.append(" , DeadType as deadType ");
-                builder.append(" ,(select top 1 ItemName from Fmis_ItemDetails where ItemDetailsId = DeadType) as deadTypeText ");
-                builder.append(" , AshesManageMode as ashesManageMode ");
-                builder.append(" , CremationTime as cremationTime ");
-                builder.append(" ,CrematingNumber * CrematingPrice  crematingCharge ");
-                builder.append(" ,ch.Charge as charge ");
-                SELECT(builder.toString());
-                FROM(TableNames.Cremating +" cr,"+TableNames.Charge +" ch ");
-                WHERE( " cr.Random_Id = ch.Random_Id");
-                WHERE(" cr.OperationNO = #{operationNo} ");
-            }
-        }.toString();
-    }
-
-
     /**
      * 按照业务编号加载火化任务详情信息
      *
@@ -58,17 +28,18 @@ public class BusinessCrematingProvider {
                 StringBuilder builder = new StringBuilder();
                 builder.append(" top 1 cr.id,cr.OperationNO as operationNO");
                 builder.append(" , CrematingMachineTypeID as crematingMachineTypeID ");
+                builder.append(",(select top 1 Name from f_ServiceItem where id=CrematingMachineTypeID) as crematingMachineTypeText ");
                 builder.append(" , DeadType as deadType ");
                 builder.append(" ,(select top 1 ItemName from Fmis_ItemDetails where ItemDetailsId = DeadType) as deadTypeText ");
                 builder.append(" , AshesManageMode as ashesManageMode ");
                 builder.append(" ,IsBespeak as isBespeak ");
-                builder.append(" , CremationTime as cremationTime ");
+                builder.append(" , OrderCremationTime as orderCremationTime ");
                 builder.append(" , CrematingPrice crematingPrice ");
-                builder.append(" ,CrematingNumber * CrematingPrice  crematingCharge ");
                 builder.append(" ,ch.Charge as charge ");
                 SELECT(builder.toString());
-                FROM(TableNames.Cremating +" cr,"+TableNames.Charge +" ch ");
-                WHERE( " cr.Random_Id = ch.Random_Id");
+                FROM(TableNames.Cremating +" cr " );
+                JOIN(TableNames.Charge + " ch on cr.Random_Id = ch.Random_Id " +
+                        "and ch.IsDelete = 0 ");
                 WHERE(" cr.OperationNO = #{operationNo} ");
             }
         }.toString();

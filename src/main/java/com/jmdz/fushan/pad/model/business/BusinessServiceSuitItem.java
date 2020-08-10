@@ -7,12 +7,12 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 
 /**
- * 物品服务套餐信息
+ * 告别物品服务套餐信息
  *
  * @author LiCongLu
  * @date 2020-08-07 11:10
  */
-@ApiModel(value = "物品服务套餐信息", description = "物品服务套餐信息")
+@ApiModel(value = "告别物品服务套餐信息", description = "告别物品服务套餐信息")
 public class BusinessServiceSuitItem extends BaseBean {
 
     /**

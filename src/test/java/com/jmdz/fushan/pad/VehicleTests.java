@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -153,7 +154,6 @@ public class VehicleTests {
         LogUtil.line("查询结果：" + JacksonUtil.obj2Json(baseResult));
     }
 
-
     @Test
     @DisplayName("测试添加物品服务")
     public void testSaveVehicleCharge() {
@@ -199,5 +199,46 @@ public class VehicleTests {
         data.setOperationNo("20200709002");
         BaseResult baseResult = vehicleService.loadQrCode(loginItem, data);
         LogUtil.line("加载结果：" + JacksonUtil.obj2Json(baseResult));
+    }
+
+    @Test
+    @DisplayName("测试接运字典信息")
+    public void testLoadVehicleDataPicker() {
+        BaseResult baseResult = vehicleService.loadVehicleDataPicker();
+        LogUtil.line("加载结果：" + JacksonUtil.obj2Json(baseResult));
+    }
+
+    @Test
+    @DisplayName("测试添加车辆接运信息")
+    public void testSaveVehicleTask() {
+        VehicleTaskData data = new VehicleTaskData();
+        data.setUserId(loginItem.getUserId())
+                .setLoginId(loginItem.getUserId());
+
+        // 请求数据
+        data.setDeadName("赵孙002")
+                .setDeadAge("68")
+                .setDeadSex("女")
+                .setRelationName("孙里002")
+                .setRelationPhone("15047856356")
+                .setDeadRelation("父女")
+                .setVehicleTypeId(2388)
+                .setCarryTime("2020-08-10 16:58")
+                .setCarryPlace("济南市历下区河区8号楼706室")
+                .setCheLiangYongTu("91eca613-edca-47ae-b276-87c461226dd6");
+
+        // 验证请求数据
+        BaseResult result = handlerWrapper.validateBean(data);
+        if (result != null) {
+            LogUtil.line("验证结果：" + JacksonUtil.obj2Json(result));
+            return;
+        }
+
+        try {
+            BaseResult baseResult = vehicleService.saveVehicleTask(loginItem, data);
+            LogUtil.line("执行结果：" + JacksonUtil.obj2Json(baseResult));
+        } catch (ActionException e) {
+            LogUtil.line("执行异常：" + e.getMessage());
+        }
     }
 }

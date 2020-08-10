@@ -78,6 +78,12 @@ public class ServiceSuitSetItem extends BaseBean {
     @ApiModelProperty(value = "套餐关键字", name = "suitKey", position = 10)
     private Integer suitKey;
 
+    /**
+     * 服务类型表名
+     */
+    @ApiModelProperty(value = "服务类型表名", name = "tableName", position = 11)
+    private String tableName;
+
     public Integer getItemId() {
         return itemId;
     }
@@ -165,6 +171,15 @@ public class ServiceSuitSetItem extends BaseBean {
 
     public ServiceSuitSetItem setSuitKey(Integer suitKey) {
         this.suitKey = suitKey;
+        return this;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public ServiceSuitSetItem setTableName(String tableName) {
+        this.tableName = tableName;
         return this;
     }
 }

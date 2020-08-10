@@ -53,9 +53,9 @@ public class DeadChargeAllItem extends BaseBean {
     private BigDecimal realCharge;
 
     /**
-     * 是否卫生棺
+     * 是否纸棺(卫生棺)
      */
-    private Integer asWeiShengGuan;
+    private Integer asZhiGuan;
 
     public Integer getId() {
         return id;
@@ -129,12 +129,12 @@ public class DeadChargeAllItem extends BaseBean {
         return this;
     }
 
-    public Integer getAsWeiShengGuan() {
-        return asWeiShengGuan;
+    public Integer getAsZhiGuan() {
+        return asZhiGuan;
     }
 
-    public DeadChargeAllItem setAsWeiShengGuan(Integer asWeiShengGuan) {
-        this.asWeiShengGuan = asWeiShengGuan;
+    public DeadChargeAllItem setAsZhiGuan(Integer asZhiGuan) {
+        this.asZhiGuan = asZhiGuan;
         return this;
     }
 }

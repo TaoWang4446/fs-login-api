@@ -31,7 +31,9 @@ public class VehicleManageProvider {
                 VALUES("OperationNO", "#{item.operationNo}");
                 VALUES("LinkmanName", "#{item.linkmanName}");
                 VALUES("LinkmanPhone", "#{item.linkmanPhone}");
+                VALUES("DierRelation", "#{item.deadRelation}");
                 VALUES("CarryPlace", "#{item.carryPlace,jdbcType=VARCHAR}");
+                VALUES("CheliangYongTu", "#{item.cheLiangYongTu,jdbcType=VARCHAR}");
                 VALUES("CarryTime", "Convert(varchar(16),#{item.carryTime},120)");
                 VALUES("Remark", "#{item.remark}");
                 VALUES("Random_Id", "#{item.randomId}");

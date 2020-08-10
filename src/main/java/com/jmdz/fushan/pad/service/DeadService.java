@@ -87,7 +87,7 @@ public class DeadService extends BaseService {
             chargeTotalItem.setRealCharge(chargeTotalItem.getRealCharge().add(item.getRealCharge()));
 
             //判断数据里面是否有卫生棺信息
-            if (DataUtil.valid(item.getAsWeiShengGuan())) {
+            if (DataUtil.valid(item.getAsZhiGuan())) {
                 coffinList.add(item.getItemName());
             }
         }

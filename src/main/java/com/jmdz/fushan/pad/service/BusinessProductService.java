@@ -213,7 +213,7 @@ public class BusinessProductService extends BaseService {
             return failure("业务编号错误，未找到此逝者");
         }
 
-        ChargeItem chargeItem = chargeDao.getFuneralProductChargeById(data.getId());
+        ChargeItem chargeItem = funeralProductDao.getFuneralProductChargeById(data.getId());
         if (chargeItem == null || DataUtil.invalid(chargeItem.getProductId())) {
             return failure("费用主键错误，不存在此丧葬用品费用");
         }
@@ -241,7 +241,7 @@ public class BusinessProductService extends BaseService {
             return failure("业务编号错误，未找到此逝者");
         }
 
-        ChargeItem chargeItem = chargeDao.getFuneralProductChargeById(data.getId());
+        ChargeItem chargeItem = funeralProductDao.getFuneralProductChargeById(data.getId());
         if (chargeItem == null || DataUtil.invalid(chargeItem.getProductId())) {
             return failure("费用主键错误，不存在此丧葬用品费用");
         }
@@ -274,7 +274,7 @@ public class BusinessProductService extends BaseService {
         }
 
         // 更新费用数据
-        chargeDao.updateFuneralProductCharge(chargeItem, loginItem.getUserId());
+        funeralProductDao.updateFuneralProductCharge(chargeItem, loginItem.getUserId());
 
         // 添加日志
         String logContent = StringUtil.format("编辑收费项:业务编号【{0}】，逝者姓名【{1}】，服务项目【{2}】，价格【{3}】" +
@@ -306,7 +306,7 @@ public class BusinessProductService extends BaseService {
             return failure("业务编号错误，未找到此逝者");
         }
 
-        ChargeItem chargeItem = chargeDao.getFuneralProductChargeById(data.getId());
+        ChargeItem chargeItem = funeralProductDao.getFuneralProductChargeById(data.getId());
         if (chargeItem == null || DataUtil.invalid(chargeItem.getProductId())) {
             return failure("费用主键错误，不存在此丧葬用品费用");
         }
@@ -322,7 +322,7 @@ public class BusinessProductService extends BaseService {
         }
 
         // 更新费用数据
-        chargeDao.deleteFuneralProductCharge(chargeItem.getOperationNo(), chargeItem.getId(), chargeItem.getProductId());
+        funeralProductDao.deleteFuneralProductCharge(chargeItem.getOperationNo(), chargeItem.getId(), chargeItem.getProductId());
 
         // 添加日志
         String logContent = StringUtil.format("删除丧葬用品:业务编号【{0}】，逝者姓名【{1}】，丧葬用品名称【{2}】，数量【{3}】，单价【{4}】，费用【{5}】"

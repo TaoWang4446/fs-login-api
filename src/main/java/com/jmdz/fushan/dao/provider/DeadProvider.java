@@ -36,6 +36,7 @@ public class DeadProvider {
                 VALUES("DierAge", "#{item.deadAge}");
                 VALUES("BirthDay", "#{item.deadBirthday}");
                 VALUES("DeathAddress", "#{item.deathAddress}");
+                VALUES("DeathCause", "#{item.deathCause}");
                 VALUES("DeathTime", "#{item.deathTime}");
                 VALUES("CertificateNO", "#{item.deadCertificateNo}");
                 VALUES("IsDead", "1");
@@ -178,7 +179,7 @@ public class DeadProvider {
                 StringBuilder builder = new StringBuilder();
                 builder.append("  charge.id,sItem.id as itemId, sItem.ParentId as parentId, sItem.Name as itemName ");
                 builder.append(" ,charge.Number as number,charge.Charge as charge, (charge.HuiminCharge + charge.PreferentialCharge) as benefitCharge ");
-                builder.append(" , charge.RealCharge as realCharge,IsWeiShengGuan as asWeiShengGuan ");
+                builder.append(" , charge.RealCharge as realCharge,iszhiguan as asZhiGuan ");
                 SELECT(builder.toString());
                 FROM(TableNames.Charge + " charge ");
                 JOIN(TableNames.ServiceItem + " sItem on charge.ServiceItem = sItem.id  ");

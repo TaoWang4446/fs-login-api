@@ -1,6 +1,7 @@
 package com.jmdz.fushan.pad.model.weixin;
 
 import com.jmdz.common.base.BaseBean;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
@@ -67,9 +68,19 @@ public class VehicleManageItem extends BaseBean {
     private Integer bespeakVehicleType;
 
     /**
+     *  车辆用途
+     */
+    private String cheLiangYongTu;
+
+    /**
      * 接运状态
      */
     private Integer carryState;
+
+    /**
+     * 与逝者关系
+     */
+    private String deadRelation;
 
     public String getVehicleId() {
         return vehicleId;
@@ -170,12 +181,30 @@ public class VehicleManageItem extends BaseBean {
         return this;
     }
 
+    public String getCheLiangYongTu() {
+        return cheLiangYongTu;
+    }
+
+    public VehicleManageItem setCheLiangYongTu(String cheLiangYongTu) {
+        this.cheLiangYongTu = cheLiangYongTu;
+        return this;
+    }
+
     public Integer getCarryState() {
         return carryState;
     }
 
     public VehicleManageItem setCarryState(Integer carryState) {
         this.carryState = carryState;
+        return this;
+    }
+
+    public String getDeadRelation() {
+        return deadRelation;
+    }
+
+    public VehicleManageItem setDeadRelation(String deadRelation) {
+        this.deadRelation = deadRelation;
         return this;
     }
 }

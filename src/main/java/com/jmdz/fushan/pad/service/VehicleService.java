@@ -2,23 +2,30 @@ package com.jmdz.fushan.pad.service;
 
 import com.jmdz.common.base.BaseResult;
 import com.jmdz.common.core.ActionException;
+import com.jmdz.common.ext.ArrayListExt;
 import com.jmdz.common.util.BeanUtil;
 import com.jmdz.common.util.DataUtil;
 import com.jmdz.common.util.DateUtil;
 import com.jmdz.common.util.StringUtil;
 import com.jmdz.fushan.base.BaseService;
 import com.jmdz.fushan.dao.*;
+import com.jmdz.fushan.helper.GlobalTool;
 import com.jmdz.fushan.helper.RecordTool;
 import com.jmdz.fushan.model.config.BusinessConst;
 import com.jmdz.fushan.model.config.ConfigData;
 import com.jmdz.fushan.model.config.Constants;
+import com.jmdz.fushan.model.config.PickerType;
 import com.jmdz.fushan.model.entity.RecordImage;
 import com.jmdz.fushan.pad.model.ChargeItem;
 import com.jmdz.fushan.pad.model.OperationNoData;
+import com.jmdz.fushan.pad.model.ServiceItem;
 import com.jmdz.fushan.pad.model.business.DeadBasicItem;
+import com.jmdz.fushan.pad.model.business.PickerItem;
 import com.jmdz.fushan.pad.model.business.RelationItem;
 import com.jmdz.fushan.pad.model.login.LoginItem;
 import com.jmdz.fushan.pad.model.vehicle.*;
+import com.jmdz.fushan.pad.model.weixin.VehicleManageItem;
+import com.jmdz.fushan.pad.model.weixin.WxRecServiceItem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +68,18 @@ public class VehicleService extends BaseService {
 
     @Resource
     private RelationDao relationDao;
+
+    @Resource
+    private ItemsDao itemsDao;
+
+    @Resource
+    private ServiceDao serviceDao;
+
+    @Resource
+    private GlobalTool globalTool;
+
+    @Resource
+    private VehicleManageDao vehicleManageDao;
 
     /**
      * 加载遗体接运任务列表
@@ -448,5 +467,126 @@ public class VehicleService extends BaseService {
         // 二维码基本信息
         loadItem.setImagePath(recordImage.getImagePath());
         return success(loadItem);
+    }
+
+    /**
+     * 加载字典数据等车辆基础数据接口
+     *
+     * @param
+     * @return
+     * @author LiCongLu
+     * @date 2020-08-10 11:39
+     */
+    public BaseResult<VehicleDataItem> loadVehicleDataPicker() {
+        VehicleDataItem loadItem = new VehicleDataItem();
+
+        ArrayList<PickerItem> dictItems = new ArrayList<>();
+
+        // 性别(文本)
+        dictItems.addAll(itemsDao.getItemNameByCode(PickerType.XingBie, "XTZL_XB"));
+        // 与逝者关系(文本)
+        dictItems.addAll(itemsDao.getItemNameByCode(PickerType.YuShiZheGuanXi, "YWZL_YSZGX"));
+        // 死亡原因(文本)
+        dictItems.addAll(itemsDao.getItemNameByCode(PickerType.SiWangYuanYin, "YWZL_SWYY"));
+        // 车辆用途(主键)
+        dictItems.addAll(itemsDao.getItemDetailsIdByCode(PickerType.CheLiangYongTu, "YWZL_CLYT"));
+
+        loadItem.setDictItems(dictItems);
+
+        // 预约车型
+        loadItem.setVehicleTypes(serviceDao.listPickerServiceByParentId(117));
+
+        return success(loadItem);
+    }
+
+    /**
+     * 新增接运任务接口
+     *
+     * @param loginItem 当前账号
+     * @param data      接运任务信息
+     * @return
+     * @author LiCongLu
+     * @date 2020-08-10 13:11
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public BaseResult saveVehicleTask(LoginItem loginItem, VehicleTaskData data) throws ActionException {
+
+        // 生成业务编号
+        String operationNo = globalTool.createOperationNo();
+        String randomId = DataUtil.getUUID();
+        DeadBasicItem deadItem = new DeadBasicItem();
+        deadItem.setOperationNo(operationNo);
+        if (DataUtil.invalid(deadItem.getOperationNo())) {
+            throw exception("生成新业务编号错误");
+        }
+        deadItem.setDeadName(DataUtil.invalid(data.getDeadName()) ? "" : data.getDeadName())
+                .setDeadAge(data.getDeadAge())
+                .setDeadSex(data.getDeadSex())
+                .setDeathCause(data.getDeathCause());
+        // 新增逝者
+        deadDao.insertDeadBasicItem(deadItem, loginItem);
+
+        // 家属信息
+        RelationItem relationItem = new RelationItem();
+        relationItem.setOperationNo(deadItem.getOperationNo())
+                .setRelationName(DataUtil.invalid(data.getRelationName()) ? "" : data.getRelationName())
+                .setRelationPhone(data.getRelationPhone())
+                .setRelationAddress(data.getRelationAddress())
+                .setDeadRelation(data.getDeadRelation());
+        relationDao.insertRelationItem(relationItem, loginItem);
+        if (DataUtil.invalid(relationItem.getRelationId())) {
+            throw exception("保存家属信息失败");
+        }
+
+        // 接运费用信息
+        ServiceItem typeItem = serviceDao.getServiceItemById(data.getVehicleTypeId());
+        if (typeItem == null || DataUtil.invalid(typeItem.getId())) {
+            throw exception("预约车型错误，未找到此车型");
+        }
+
+        // 接运信息
+        VehicleManageItem vehicleItem = new VehicleManageItem();
+        vehicleItem.setVehicleId(randomId)
+                .setOperationNo(operationNo)
+                .setLinkmanName(data.getRelationName())
+                .setLinkmanPhone(data.getRelationPhone())
+                .setDeadRelation(data.getDeadRelation())
+                .setCarryPlace(data.getCarryPlace())
+                .setCarryTime(data.getCarryTime())
+                .setCheLiangYongTu(data.getCheLiangYongTu())
+                .setRemark(data.getRemark())
+                .setRandomId(randomId)
+                .setChargeStandard(typeItem.getPrice())
+                .setFactStandard(typeItem.getPrice())
+                .setBespeakVehicleType(typeItem.getId())
+                .setCarryState(Constants.CarryState.ShangWeiChuChe);
+
+        // 插入接运信息
+        vehicleManageDao.insertVehicleManage(vehicleItem, loginItem);
+
+        // 接运费用
+        ChargeItem chargeTypeItem = new ChargeItem();
+        chargeTypeItem.setOperationNo(operationNo);
+        chargeTypeItem.setServiceCode(40);
+        chargeTypeItem.setRandomId(randomId);
+        chargeTypeItem.setItemId(typeItem.getId());
+        chargeTypeItem.setNumber(new BigDecimal(1));
+        chargeTypeItem.setPrice(typeItem.getPrice());
+        chargeTypeItem.setCharge(typeItem.getPrice());
+        chargeTypeItem.setChargeDate(DateUtil.formatPattern16(new Date()))
+                .setProductFrom(0);
+        // 插入接运费用
+        chargeDao.insertChargeItem(chargeTypeItem, loginItem.getUserId());
+        if (DataUtil.invalid(chargeTypeItem.getId())) {
+            throw exception("添加接运费用失败");
+        }
+
+        // 添加日志
+        String logContent = StringUtil.format("车辆信息登记,操作人员【{0}】,逝者【{1}】【{2}】,联系人姓名【{3}】，联系电话【{4}】，预约车型【{5}】，预约时间【{6}】，接尸地点【{7}】。"
+                , loginItem.getRealName(), deadItem.getOperationNo(), deadItem.getDeadName(), relationItem.getRelationName(), relationItem.getRelationPhone(), typeItem.getName(), vehicleItem.getCarryTime(), vehicleItem.getCarryPlace());
+        businessLogDao.insertBusinessLog(loginItem.getUserId(), loginItem.getRealName(), BusinessConst.BusinessType.CheLiang, "接运办理", BusinessConst.OperateType.TianJia, logContent, deadItem.getOperationNo());
+
+
+        return success("添加完成");
     }
 }

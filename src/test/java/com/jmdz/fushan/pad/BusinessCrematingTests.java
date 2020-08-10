@@ -59,12 +59,12 @@ public class BusinessCrematingTests {
         BusinessCrematingInfoData businessCrematingInfoData = new BusinessCrematingInfoData();
 
         //data.setId(58111);
-        businessCrematingInfoData.setOperationNo("20200806112");
+        businessCrematingInfoData.setOperationNo("20200810002");
         businessCrematingInfoData.setCrematingMachineTypeID(780);
+        businessCrematingInfoData.setDeadType("1ed972a1-ab88-422c-8a4b-8530af8eeb89");
         businessCrematingInfoData.setAshesManageMode("带走");
         businessCrematingInfoData.setIsBespeak(1);
         businessCrematingInfoData.setCrematingPrice(new BigDecimal(590.00));
-        businessCrematingInfoData.setCharge(new BigDecimal(600.00));
 
         ChargeItem chargeItem = new ChargeItem();
         data.setBusinessCrematingInfoData(businessCrematingInfoData);
@@ -91,7 +91,7 @@ public class BusinessCrematingTests {
     @DisplayName("测试加载业务洽谈火化任务 详情 接口")
     public void testLoadBusinessCrematingInfoByOperationNo() {
         OperationNoData data = new OperationNoData();
-        data.setOperationNo("20171213001");
+        data.setOperationNo("20201010001");
         BaseResult<BusinessCrematingInfo> baseResult = businessCrematingService.loadBusinessCrematingInfoByOperationNo(data);
         LogUtil.line("查询结果：" + JacksonUtil.obj2Json(baseResult));
     }

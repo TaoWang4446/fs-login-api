@@ -45,7 +45,7 @@ public class RelationItem extends BaseBean {
     /**
      * 亲属住址
      */
-    @ApiModelProperty(value = "", name = "", position = 6)
+    @ApiModelProperty(value = "亲属住址", name = "relationAddress", position = 6)
     private String relationAddress;
 
     /**

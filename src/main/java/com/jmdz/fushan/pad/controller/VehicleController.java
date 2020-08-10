@@ -7,8 +7,10 @@ import com.jmdz.fushan.pad.model.ChargeItem;
 import com.jmdz.fushan.pad.model.OperationNoData;
 import com.jmdz.fushan.pad.model.OperationNoIdData;
 import com.jmdz.fushan.pad.model.UserData;
+import com.jmdz.fushan.pad.model.business.BusinessDataItem;
 import com.jmdz.fushan.pad.model.business.DeadBasicData;
 import com.jmdz.fushan.pad.model.business.DeadBasicItem;
+import com.jmdz.fushan.pad.model.business.PickerItem;
 import com.jmdz.fushan.pad.model.vehicle.*;
 import com.jmdz.fushan.pad.service.BusinessBasicService;
 import com.jmdz.fushan.pad.service.RecordService;
@@ -221,5 +223,33 @@ public class VehicleController extends LoginHandler {
     @PostMapping(value = "/load-qr-code")
     public BaseResult<QrCodeItem> loadQrCode(@RequestBody OperationNoData data) {
         return loginHandler(data, loginItem -> vehicleService.loadQrCode(loginItem, data));
+    }
+
+    /**
+     * 加载字典数据等车辆基础数据接口
+     *
+     * @param
+     * @return
+     * @author LiCongLu
+     * @date 2020-08-10 11:39
+     */
+    @ApiOperation(value = "加载字典数据等车辆基础数据接口", notes = "加载字典数据等车辆基础数据接口,包含性别、车型等数据")
+    @PostMapping(value = "/load-vehicle-data-picker")
+    public BaseResult<VehicleDataItem> loadVehicleDataPicker(@RequestBody UserData data) {
+        return loginHandler(data, loginItem -> vehicleService.loadVehicleDataPicker());
+    }
+
+    /**
+     * 新增接运任务接口
+     *
+     * @param data 接运任务信息
+     * @return
+     * @author LiCongLu
+     * @date 2020-08-10 13:11
+     */
+    @ApiOperation(value = "新增接运任务接口", notes = "新增接运任务接口")
+    @PostMapping(value = "/save-vehicle-task")
+    public BaseResult saveVehicleTask(@RequestBody VehicleTaskData data) {
+        return loginHandler(data, loginItem -> vehicleService.saveVehicleTask(loginItem,data));
     }
 }

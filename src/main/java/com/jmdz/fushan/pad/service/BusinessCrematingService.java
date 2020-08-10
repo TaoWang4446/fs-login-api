@@ -8,15 +8,20 @@ import com.jmdz.fushan.base.BaseService;
 import com.jmdz.fushan.dao.BusinessCrematingDao;
 import com.jmdz.fushan.dao.BusinessLogDao;
 import com.jmdz.fushan.dao.ChargeDao;
+import com.jmdz.fushan.dao.DeadDao;
 import com.jmdz.fushan.model.config.BusinessConst;
 import com.jmdz.fushan.pad.model.OperationNoData;
 import com.jmdz.fushan.pad.model.business.BusinessCrematingData;
 import com.jmdz.fushan.pad.model.business.BusinessCrematingInfo;
+import com.jmdz.fushan.pad.model.business.BusinessCrematingInfoData;
+import com.jmdz.fushan.pad.model.business.DeadBasicItem;
 import com.jmdz.fushan.pad.model.login.LoginItem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.xml.crypto.Data;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -27,6 +32,10 @@ import java.util.UUID;
  */
 @Service("businessCrematingService")
 public class BusinessCrematingService extends BaseService {
+
+    @Resource
+    private DeadDao deadDao;
+
     @Resource
     private BusinessCrematingDao businessCrematingDao;
 
@@ -35,23 +44,6 @@ public class BusinessCrematingService extends BaseService {
 
     @Resource
     private BusinessLogDao businessLogDao;
-
-
-    /**
-     * 查询火化 任务列表 信息
-     *
-     * @param data 业务编号
-     * @return
-     * @author WangShengtao
-     * @date 2020-08-06 10:30
-     */
-    public BaseResult loadBusinessCrematingListInfoByOperationNo(OperationNoData data) {
-        BusinessCrematingInfo crematingInfo = businessCrematingDao.getBusinessCrematingInfoByOperationNo(data.getOperationNo());
-        if(null == crematingInfo){
-            return failure("请检查业务编号，未找到火化任务列表信息");
-        }
-        return success(crematingInfo);
-    }
 
     /**
      * 查询火化任务详情信息
@@ -62,10 +54,12 @@ public class BusinessCrematingService extends BaseService {
      * @date 2020-08-06 10:30
      */
     public BaseResult loadBusinessCrematingInfoByOperationNo(OperationNoData data) {
-        BusinessCrematingInfo crematingInfo = businessCrematingDao.getBusinessCrematingInfoByOperationNo(data.getOperationNo());
-        if(null == crematingInfo){
-            return failure("请检查业务编号，未找到火化任务详情信息");
+        DeadBasicItem deadBasicItem = deadDao.getDeadBasicByOperationNo(data.getOperationNo());
+        if (deadBasicItem == null || DataUtil.invalid(deadBasicItem.getOperationNo())) {
+            return failure("业务编号错误，未找到此逝者");
         }
+        //Todo:即便是没有 服务项目 也要 显示 所有信息
+        BusinessCrematingInfo crematingInfo = businessCrematingDao.getBusinessCrematingInfoByOperationNo(data.getOperationNo());
         return success(crematingInfo);
     }
 
@@ -79,19 +73,31 @@ public class BusinessCrematingService extends BaseService {
      * @date 2020-08-06 09:30
      */
     @Transactional(rollbackFor = Exception.class)
-    public BaseResult saveBusinessCrematingInfo(BusinessCrematingData data, LoginItem loginItem) {
+    public BaseResult saveBusinessCrematingInfo(BusinessCrematingData data, LoginItem loginItem) throws ActionException {
         BusinessCrematingInfo businessCrematingInfo = businessCrematingDao.
                 getBusinessCrematingInfoByOperationNo(data.getBusinessCrematingInfoData().getOperationNo());
 
         String randomId = UUID.randomUUID().toString();
-        data.getBusinessCrematingInfoData().setRandomId(randomId);
-        data.getChargeItem().setRandomId(randomId);
-        data.getChargeItem().setOperationNo(data.getBusinessCrematingInfoData().getOperationNo());
-        data.getChargeItem().setCharge(data.getBusinessCrematingInfoData().getCharge());
+        data.getBusinessCrematingInfoData().setCharge(getCharge(data));
+        data.getChargeItem().setCharge(getCharge(data));
+        //新增 和 更新 时 uui不一致的问题
+        // 后台逻辑计算 费用
+
         if(null == businessCrematingInfo){
+            data.getBusinessCrematingInfoData().setRandomId(randomId);
+            data.getChargeItem().setRandomId(randomId);
+            data.getChargeItem().setOperationNo(data.getBusinessCrematingInfoData().getOperationNo());
+
             businessCrematingDao.insertBusinessCrematingInfo(data.getBusinessCrematingInfoData(),loginItem);
+            if(DataUtil.invalid(data.getBusinessCrematingInfoData().getId())){
+                throw exception("添加火化任务失败");
+            }
             chargeDao.insertChargeItem(data.getChargeItem(),loginItem.getUserId());
         }else {
+            data.getBusinessCrematingInfoData().setRandomId(randomId);
+            data.getChargeItem().setRandomId(randomId);
+            data.getChargeItem().setOperationNo(data.getBusinessCrematingInfoData().getOperationNo());
+
             businessCrematingDao.updateBusinessCrematingInfo(data.getBusinessCrematingInfoData(),loginItem);
             chargeDao.updateChargeItemByOperationNoAndRandomId(data.getChargeItem(),loginItem.getUserId());
         }
@@ -105,7 +111,6 @@ public class BusinessCrematingService extends BaseService {
                 , data.getBusinessCrematingInfoData().getIsBespeak().toString()
                 , data.getBusinessCrematingInfoData().getCremationTime()
                 , data.getBusinessCrematingInfoData().getCrematingPrice().toString()
-                , data.getBusinessCrematingInfoData().getCharge().toPlainString()
                 , data.getChargeItem().getCharge().toString());
 
         businessLogDao.insertBusinessLog(loginItem.getUserId(), loginItem.getRealName(), BusinessConst.BusinessType.XinXiDengJi,
@@ -115,6 +120,41 @@ public class BusinessCrematingService extends BaseService {
 
         return success("保存成功");
     }
+
+    private BigDecimal getCharge(BusinessCrematingData data) {
+        BigDecimal charge = null;
+        if(678 == data.getBusinessCrematingInfoData().getCrematingMachineTypeID()){
+            if("0150c26a-de31-41fc-ab79-faf0667413ef".equals(data.getBusinessCrematingInfoData().getDeadType())){
+                charge = new BigDecimal(580.00);
+            }
+            if("1ed972a1-ab88-422c-8a4b-8530af8eeb89".equals(data.getBusinessCrematingInfoData().getDeadType())){
+                charge = new BigDecimal(700.00);
+            }
+            if("e5ebc963-2fa2-4644-a9d3-5841aac58dfa".equals(data.getBusinessCrematingInfoData().getDeadType())){
+                charge = new BigDecimal(700.00);
+            }
+            if("ee3774ca-bdd3-436b-b959-773a93b723a3".equals(data.getBusinessCrematingInfoData().getDeadType())){
+                charge = new BigDecimal(290.00);
+            }
+        }
+
+        if(780 == data.getBusinessCrematingInfoData().getCrematingMachineTypeID()){
+            if("0150c26a-de31-41fc-ab79-faf0667413ef".equals(data.getBusinessCrematingInfoData().getDeadType())){
+                charge = new BigDecimal(580.00);
+            }
+            if("1ed972a1-ab88-422c-8a4b-8530af8eeb89".equals(data.getBusinessCrematingInfoData().getDeadType())){
+                charge = new BigDecimal(380.00);
+            }
+            if("e5ebc963-2fa2-4644-a9d3-5841aac58dfa".equals(data.getBusinessCrematingInfoData().getDeadType())){
+                charge = new BigDecimal(380.00);
+            }
+            if("ee3774ca-bdd3-436b-b959-773a93b723a3".equals(data.getBusinessCrematingInfoData().getDeadType())){
+                charge = new BigDecimal(290.00);
+            }
+        }
+        return charge;
+    }
+
 
     /**
      * 删除火化任务详情信息（根据业务编号）
@@ -137,6 +177,12 @@ public class BusinessCrematingService extends BaseService {
                 "删除火化任务记录" , BusinessConst.OperateType.ShanChu, logContent, data.getOperationNo());
 
         return success("删除完成");
+
+    }
+
+
+
+    private void setCharge(BusinessCrematingData data) {
 
     }
 }

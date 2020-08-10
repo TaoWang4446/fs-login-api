@@ -78,6 +78,7 @@ public class ServiceSuitProvider {
                 builder.append(" distinct sItem.id as itemId,sItem.ParentId as parentId,sItem.Name as itemName ");
                 builder.append(" ,sBat.Price as itemPrice,sBat.Number as itemNumber,sItem.prickle as itemUnit,sItem.OrderBy as sort");
                 builder.append(" ,sBat.TaoCanId as suitId,details.ItemName as suitName,sBat.Biaokey as suitKey");
+                builder.append(" ,sBat.tablename as tableName");
                 SELECT(builder.toString());
                 FROM(TableNames.ServiceItemBat + " sBat ");
                 JOIN(TableNames.ServiceItem + " sItem on sBat.pkid = sItem.id ");

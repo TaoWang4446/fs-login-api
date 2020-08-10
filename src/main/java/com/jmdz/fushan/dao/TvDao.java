@@ -42,7 +42,7 @@ public interface TvDao {
      */
     @Select("select sItem.Name from " + TableNames.Charge + " charge" +
             " join " + TableNames.ServiceItem + " sItem on sItem.id = charge.ServiceItem " +
-            " where charge.IsDelete = 0 and ISNULL(sItem.IsWeiShengGuan,0) = 1" +
+            " where charge.IsDelete = 0 and ISNULL(sItem.iszhiguan,0) = 1" +
             " and charge.OperationNO = #{operationNo} ")
     @ResultType(String.class)
     ArrayList<String> listColdFaceTvLeftCoffinByOperationNo(@Param("operationNo") String operationNo);
