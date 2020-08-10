@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jmdz.fushan.pad.dead.mapper.DeadMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jmdz.fushan.pad.dead.model.Dead">
+        <id column="OperationNO" property="OperationNO" />
+        <result column="DierName" property="DierName" />
+        <result column="DierSex" property="DierSex" />
+        <result column="DierAge" property="DierAge" />
+        <result column="BirthDay" property="BirthDay" />
+        <result column="nationality" property="nationality" />
+        <result column="CertificateType" property="CertificateType" />
+        <result column="CertificateNO" property="CertificateNO" />
+        <result column="Folk" property="Folk" />
+        <result column="CensusRegisterAddress" property="CensusRegisterAddress" />
+        <result column="BeforeDeathAddress" property="BeforeDeathAddress" />
+        <result column="BeforeDeathUnit" property="BeforeDeathUnit" />
+        <result column="Business" property="Business" />
+        <result column="DeathTime" property="DeathTime" />
+        <result column="DeathAddress" property="DeathAddress" />
+        <result column="DeathCause" property="DeathCause" />
+        <result column="DeathProofUnit" property="DeathProofUnit" />
+        <result column="FuneralProofUnit" property="FuneralProofUnit" />
+        <result column="RemainsState" property="RemainsState" />
+        <result column="PaymentMode" property="PaymentMode" />
+        <result column="IsFinished" property="IsFinished" />
+        <result column="IsAshes" property="IsAshes" />
+        <result column="AshesManageMode" property="AshesManageMode" />
+        <result column="Operator" property="Operator" />
+        <result column="OperateTime" property="OperateTime" />
+        <result column="Remark" property="Remark" />
+        <result column="Pinyin" property="Pinyin" />
+        <result column="Clear_salesman" property="clearSalesman" />
+        <result column="Deposit" property="Deposit" />
+        <result column="IsPreferential" property="IsPreferential" />
+        <result column="Hobbies" property="Hobbies" />
+        <result column="Family" property="Family" />
+        <result column="Position" property="Position" />
+        <result column="WorkingTime" property="WorkingTime" />
+        <result column="Religion" property="Religion" />
+        <result column="CadaverDelivering" property="CadaverDelivering" />
+        <result column="CadaverLinkman" property="CadaverLinkman" />
+        <result column="CadaverPhone" property="CadaverPhone" />
+        <result column="CadaverIndentityNo" property="CadaverIndentityNo" />
+        <result column="Photo" property="Photo" />
+        <result column="DeathProof" property="DeathProof" />
+        <result column="IsPrint" property="IsPrint" />
+        <result column="LoadTime" property="LoadTime" />
+        <result column="DeadType" property="DeadType" />
+        <result column="IsExternalBody" property="IsExternalBody" />
+        <result column="IsWilling" property="IsWilling" />
+        <result column="PlateNumber" property="PlateNumber" />
+        <result column="ArriveTime" property="ArriveTime" />
+        <result column="IsArrived" property="IsArrived" />
+        <result column="DeathProofNo" property="DeathProofNo" />
+        <result column="CrematingProofNo" property="CrematingProofNo" />
+        <result column="DierProvince" property="DierProvince" />
+        <result column="DierProvinceName" property="DierProvinceName" />
+        <result column="DierCity" property="DierCity" />
+        <result column="DierCityName" property="DierCityName" />
+        <result column="DierDistrict" property="DierDistrict" />
+        <result column="DierDistrictName" property="DierDistrictName" />
+        <result column="DierTown" property="DierTown" />
+        <result column="DierStreetOffice" property="DierStreetOffice" />
+        <result column="DierStreetOfficeName" property="DierStreetOfficeName" />
+        <result column="DierVillage" property="DierVillage" />
+        <result column="DierVillageName" property="DierVillageName" />
+        <result column="AreaCode" property="AreaCode" />
+        <result column="AreaName" property="AreaName" />
+        <result column="CrematingPrintNumber" property="CrematingPrintNumber" />
+        <result column="IsDead" property="IsDead" />
+        <result column="BoneType" property="BoneType" />
+        <result column="IsSinotrans" property="IsSinotrans" />
+        <result column="SinotransDate" property="SinotransDate" />
+        <result column="IsViewCremation" property="IsViewCremation" />
+        <result column="CurrentPosition" property="CurrentPosition" />
+        <result column="PeopleType" property="PeopleType" />
+        <result column="IsUploadPhoto" property="IsUploadPhoto" />
+        <result column="ServiceGuider" property="ServiceGuider" />
+        <result column="IsChargeReduce" property="IsChargeReduce" />
+        <result column="AddUser" property="AddUser" />
+        <result column="AddTime" property="AddTime" />
+        <result column="DocumentState" property="DocumentState" />
+        <result column="ColdID" property="ColdID" />
+        <result column="ColdNo" property="ColdNo" />
+        <result column="ColdStatus" property="ColdStatus" />
+        <result column="ColdBeginTime" property="ColdBeginTime" />
+        <result column="ColdEndTime" property="ColdEndTime" />
+        <result column="ColdTypeID" property="ColdTypeID" />
+        <result column="ColdTypeName" property="ColdTypeName" />
+        <result column="ChargePay" property="ChargePay" />
+        <result column="ChargeReceivable" property="ChargeReceivable" />
+        <result column="ChargeReal" property="ChargeReal" />
+        <result column="ChargeDate" property="ChargeDate" />
+        <result column="MournID" property="MournID" />
+        <result column="MournName" property="MournName" />
+        <result column="MournStatus" property="MournStatus" />
+        <result column="MournBeginTime" property="MournBeginTime" />
+        <result column="MournEndTime" property="MournEndTime" />
+        <result column="MournTypeID" property="MournTypeID" />
+        <result column="MournTypeName" property="MournTypeName" />
+        <result column="FarewellID" property="FarewellID" />
+        <result column="FarewellName" property="FarewellName" />
+        <result column="FarewellStatus" property="FarewellStatus" />
+        <result column="FarewellBeginTime" property="FarewellBeginTime" />
+        <result column="FarewellEndTime" property="FarewellEndTime" />
+        <result column="FarewellTypeID" property="FarewellTypeID" />
+        <result column="FarewellTypeName" property="FarewellTypeName" />
+        <result column="CrematingID" property="CrematingID" />
+        <result column="CrematingNo" property="CrematingNo" />
+        <result column="CrematingTypeID" property="CrematingTypeID" />
+        <result column="CrematingTypeName" property="CrematingTypeName" />
+        <result column="CrematingDate" property="CrematingDate" />
+        <result column="GouMuHeTongHao" property="GouMuHeTongHao" />
+        <result column="TaocanId" property="TaocanId" />
+        <result column="TaocanName" property="TaocanName" />
+        <result column="TaocanShuliang" property="TaocanShuliang" />
+        <result column="GouMuHeTongUrl" property="GouMuHeTongUrl" />
+        <result column="LianXiDanWei" property="LianXiDanWei" />
+        <result column="IsFarmer" property="IsFarmer" />
+        <result column="IsLocal" property="IsLocal" />
+        <result column="IsDiBao" property="IsDiBao" />
+        <result column="NoName" property="NoName" />
+        <result column="BuBan" property="BuBan" />
+        <result column="IsSign" property="IsSign" />
+        <result column="SignTime" property="SignTime" />
+        <result column="PlateUser" property="PlateUser" />
+        <result column="QiaTanYuan" property="QiaTanYuan" />
+        <result column="ZhengRongBeiZhu" property="ZhengRongBeiZhu" />
+        <result column="HuiMinQuYu" property="HuiMinQuYu" />
+        <result column="PresentLiveAddress" property="PresentLiveAddress" />
+        <result column="SynDeadId" property="SynDeadId" />
+        <result column="Push_State" property="pushState" />
+        <result column="OperationType" property="OperationType" />
+        <result column="DataPushDate" property="DataPushDate" />
+        <result column="SinotransAddress" property="SinotransAddress" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        OperationNO, DierName, DierSex, DierAge, BirthDay, nationality, CertificateType, CertificateNO, Folk, CensusRegisterAddress, BeforeDeathAddress, BeforeDeathUnit, Business, DeathTime, DeathAddress, DeathCause, DeathProofUnit, FuneralProofUnit, RemainsState, PaymentMode, IsFinished, IsAshes, AshesManageMode, Operator, OperateTime, Remark, Pinyin, Clear_salesman, Deposit, IsPreferential, Hobbies, Family, Position, WorkingTime, Religion, CadaverDelivering, CadaverLinkman, CadaverPhone, CadaverIndentityNo, Photo, DeathProof, IsPrint, LoadTime, DeadType, IsExternalBody, IsWilling, PlateNumber, ArriveTime, IsArrived, DeathProofNo, CrematingProofNo, DierProvince, DierProvinceName, DierCity, DierCityName, DierDistrict, DierDistrictName, DierTown, DierStreetOffice, DierStreetOfficeName, DierVillage, DierVillageName, AreaCode, AreaName, CrematingPrintNumber, IsDead, BoneType, IsSinotrans, SinotransDate, IsViewCremation, CurrentPosition, PeopleType, IsUploadPhoto, ServiceGuider, IsChargeReduce, AddUser, AddTime, DocumentState, ColdID, ColdNo, ColdStatus, ColdBeginTime, ColdEndTime, ColdTypeID, ColdTypeName, ChargePay, ChargeReceivable, ChargeReal, ChargeDate, MournID, MournName, MournStatus, MournBeginTime, MournEndTime, MournTypeID, MournTypeName, FarewellID, FarewellName, FarewellStatus, FarewellBeginTime, FarewellEndTime, FarewellTypeID, FarewellTypeName, CrematingID, CrematingNo, CrematingTypeID, CrematingTypeName, CrematingDate, GouMuHeTongHao, TaocanId, TaocanName, TaocanShuliang, GouMuHeTongUrl, LianXiDanWei, IsFarmer, IsLocal, IsDiBao, NoName, BuBan, IsSign, SignTime, PlateUser, QiaTanYuan, ZhengRongBeiZhu, HuiMinQuYu, PresentLiveAddress, SynDeadId, Push_State, OperationType, DataPushDate, SinotransAddress
+    </sql>
+
+</mapper>
